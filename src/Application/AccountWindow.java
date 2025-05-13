@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -16,7 +18,11 @@ public class AccountWindow {
         Stage window = new Stage();
         window.setTitle("Account");
         window.setResizable(false);
-
+        window.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if ((e.getCode() == KeyCode.ESCAPE)) {
+                window.close();
+            }
+        });
         // Создание элементов интерфейса
         Label titleLabel = new Label("Welcome! Please log in or register");
         Label userLabel = new Label("Username:");

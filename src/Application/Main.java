@@ -8,6 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -102,6 +104,7 @@ public class Main extends Application {
         return cardBox;
     }
     //Setting the History Scene
+    @SuppressWarnings("unchecked")
     private static Scene goToHistoryScene(Stage primaryStage) {
         GridPane layoutHistory = new GridPane();
         setDefault(layoutHistory, primaryStage);
@@ -136,7 +139,7 @@ public class Main extends Application {
 
         layoutHistory.add(table, 1, 2, 3, 3);
         layoutHistory.setBackground(Background.fill(Color.WHITESMOKE));
-
+        backHome(primaryStage);
         return new Scene(layoutHistory, 800, 600);
     }
     //Setting the Transfers Scene
@@ -159,7 +162,7 @@ public class Main extends Application {
         amountField.setPromptText("Сумма");
 
         Button sendButton = new Button("Отправить");
-        sendButton.setOnAction(e -> {
+        sendButton.setOnAction(_ -> {
             if (!recipientField.getText().isEmpty() && !amountField.getText().isEmpty()) {
                 System.out.println("Перевод отправлен!");
                 primaryStage.setScene(goToSceneHome(primaryStage));
@@ -176,7 +179,7 @@ public class Main extends Application {
 
         layoutTransfers.add(form, 1, 2, 3, 3);
         layoutTransfers.setBackground(Background.fill(Color.WHITESMOKE));
-
+        backHome(primaryStage);
         return new Scene(layoutTransfers, 800, 600);
     }
     //Setting the Profile Scene
@@ -201,7 +204,7 @@ public class Main extends Application {
 
         // Кнопка выхода
         Button logoutButton = new Button("Выйти");
-        logoutButton.setOnAction(e -> {
+        logoutButton.setOnAction(_ -> {
             AccountWindow.displayAccountWindow(primaryStage);// Или открыть окно логина
         });
 
@@ -212,6 +215,7 @@ public class Main extends Application {
         layoutProfile.add(container, 1, 2, 3, 3);
         layoutProfile.setBackground(Background.fill(Color.WHITESMOKE));
 
+        backHome(primaryStage);
         return new Scene(layoutProfile, 800, 600);
     }
     //Setting the Credit Scene
@@ -281,11 +285,9 @@ public class Main extends Application {
         History.setOnAction(_ -> primaryStage.setScene(goToHistoryScene(primaryStage)));
         Transfers.setOnAction(_ -> primaryStage.setScene(goToTransfersScene(primaryStage)));
         Profile.setOnAction(_ -> primaryStage.setScene(goToProfileScene(primaryStage)));
-
         return Panels;
     }
-    private static HBox displayTopMenu(Stage avatarStage) {
-        Stage primaryStage = new Stage();
+    private static HBox displayTopMenu(Stage primaryStage) {
         HBox topMenu = new HBox();
         HBox nameBank = new HBox();
         Text nameBankText = new Text("TemBank");
@@ -296,10 +298,7 @@ public class Main extends Application {
         nameBank.setAlignment(Pos.CENTER_LEFT);
         nameBank.setPadding(new Insets(0, 0, 0, 20));
         Button avatar = new Button("Account");
-        avatar.setOnAction(e -> {
-            avatarStage.close();
-            AccountWindow.displayAccountWindow(primaryStage);
-        });
+        avatar.setOnAction(_ -> AccountWindow.displayAccountWindow(primaryStage));
         avatar.setTextFill(Color.WHITE);
         avatar.setPrefSize(400, 50);
         avatar.setAlignment(Pos.CENTER_RIGHT);
@@ -414,5 +413,11 @@ public class Main extends Application {
         layoutHome.getColumnConstraints().add(new ColumnConstraints(120));
         layoutHome.getColumnConstraints().add(new ColumnConstraints(120));
     }
-
+    private static void backHome(Stage primaryStage) {
+        primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, e -> {
+            if ((e.getCode() == KeyCode.ESCAPE) && (!primaryStage.getScene().equals(goToSceneHome(primaryStage)))) {
+                primaryStage.setScene(goToSceneHome(primaryStage));
+            }
+        });
+    }
 }
